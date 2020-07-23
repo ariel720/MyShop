@@ -1,0 +1,18 @@
+extends layout
+
+
+block content
+  include partials/header  
+  h1 #{title}
+  form(method='POST', action ='/products/edit/'+product._id)
+    #form-group
+      label Title:
+      input.form-control(name='title', type='text',value=product.title)
+    #form-group
+      label Writer:
+      input.form-control(name='writer', type='text',value=product.writer)
+    #form-group
+      label Description:
+      textarea.form-control(name='body' )= product.body
+    br
+    input.btn.btn-primary(type='submit', value='Submit')

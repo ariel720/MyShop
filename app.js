@@ -47,7 +47,7 @@ app.get('/',function(req, res){
 	});
 });
 
-//get single obj
+//Read single obj
 app.get('/product/:id', function(req,res){
   Product.findById(req.params.id, function(err, product){
   	res.render('product',{
@@ -55,6 +55,8 @@ app.get('/product/:id', function(req,res){
   	});
   });
 });
+
+
 
 //Add product get
 app.get('/products/add',function(req, res){
@@ -81,6 +83,51 @@ app.post('/products/add',function(req,res){
 
 	});
 
+});
+
+
+//Edit Product get
+app.get('/product/edit/:id', function(req,res){
+  Product.findById(req.params.id, function(err, product){
+  	res.render('edit_product',{
+  		title:'Edit Product Information',
+  		product:product
+  	});
+  });
+});
+
+//Edit product Post
+app.post('/products/edit/:id',function(req,res){
+	let product = {};
+	product.title = req.body.title;
+	product.writer = req.body.writer;
+	product.body = req.body.body;
+
+	let query = {_id:req.params.id}
+
+	Product.update(query, product, function(err){
+		if(err){
+			console.log(err);
+
+		}else{
+			res.redirect('/product/'+req.params.id);
+
+		}
+
+	});
+
+});
+
+//Delete Product
+app.delete('/product/:id', function(req, res){
+	let query = {_id:req.params.id}
+	Product.remove(query, function(err){
+		if(err){
+			console.log(err);
+		}else{
+			res.send('Success');
+		}
+	});
 });
 
 //start sever
