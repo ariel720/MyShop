@@ -1,0 +1,8 @@
+extends layout
+
+
+block content
+  include partials/header  
+  h1= product.title
+  h5 Posted by #{product.writer}
+  p=product.body

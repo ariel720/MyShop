@@ -27,8 +27,10 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine','pug');
 
 //badyparser middle ware
-app.use(bodyParser.urlencoded({ extended: false}))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname,'public')));
 
 //home route
 app.get('/',function(req, res){
@@ -43,8 +45,15 @@ app.get('/',function(req, res){
 		}
 	
 	});
+});
 
-
+//get single obj
+app.get('/product/:id', function(req,res){
+  Product.findById(req.params.id, function(err, product){
+  	res.render('product',{
+  		product:product
+  	});
+  });
 });
 
 //Add product get

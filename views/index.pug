@@ -2,8 +2,10 @@ extends layout
 
 
 block content
+  include partials/header  
   h1 #{title}
-  ul
+  ul.list-group
     each product, i in products
-      li= product.title
+      li.list-group-item
+        a(href="/product/"+product._id)= product.title
 

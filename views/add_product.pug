@@ -2,6 +2,7 @@ extends layout
 
 
 block content
+  include partials/header  
   h1 #{title}
   form(method='POST', action ='/products/add')
     #form-group
