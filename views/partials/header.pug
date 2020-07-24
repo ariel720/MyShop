@@ -14,7 +14,11 @@ header#header
         li
           a(href='/products/add') Add Product
       ul.nav.navbar-nav.navbar-nav-right
-        li
-          a(href='/users/register') Register
-        li
-          a(href='/users/login') Login
+        if user
+          li 
+            a(href='/users/logout') Logout
+        else
+          li
+            a(href='/users/register') Register
+          li
+            a(href='/users/login') Login

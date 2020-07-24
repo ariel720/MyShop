@@ -62,39 +62,18 @@ Shinhee Kim
   }
 }
 
-
- /*======Index My contries  section======
-Tab header menu
- https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_tab_header*/
-.tablink {
-  background-color: #555;
-  color: white;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  font-size: 17px;
-  width: 25%;
+/*=====Login Alert=====*/
+.alert-error{
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
 }
 
-.tablink:hover {
-  background-color: #777;
+.alert-success_msg{
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
 }
-
-/* Style the tab content */
-.tabcontent {
-  color: white;
-  display: none;
-  padding: 50px;
-  text-align: center;
-}
-
-#London {background-color:red;}
-#Paris {background-color:green;}
-#Tokyo {background-color:blue;}
-#Oslo {background-color:orange;}
-
 
 /*=====footer=====*/
 .footer {
