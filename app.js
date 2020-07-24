@@ -10,10 +10,8 @@ const passport = require('passport');
 const config = require('./config/database');
 
 
-
-
-
-mongoose.connect(config.database);
+//mongoose.connect(config.database);
+mongoose.connect(config.cloud, { useNewUrlParser: true });
 let db = mongoose.connection;
 
 //check connection
