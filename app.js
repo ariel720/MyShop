@@ -2,6 +2,10 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+/**/
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 mongoose.connect('mongodb://localhost/myshop');
 let db = mongoose.connection;
@@ -31,6 +35,39 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname,'public')));
+/**/
+// Express Session Middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 
 //home route
 app.get('/',function(req, res){
@@ -47,88 +84,11 @@ app.get('/',function(req, res){
 	});
 });
 
-//Read single obj
-app.get('/product/:id', function(req,res){
-  Product.findById(req.params.id, function(err, product){
-  	res.render('product',{
-  		product:product
-  	});
-  });
-});
-
-
-
-//Add product get
-app.get('/products/add',function(req, res){
-	res.render('add_product',{
-		title:'Add Product'
-	});
-});
-
-//Add product Post
-app.post('/products/add',function(req,res){
-	let product = new Product();
-	product.title = req.body.title;
-	product.writer = req.body.writer;
-	product.body = req.body.body;
-
-	product.save(function(err){
-
-		if(err){
-			console.log(err);
-
-		}else{
-			res.redirect('/');
-		}
-
-	});
-
-});
-
-
-//Edit Product get
-app.get('/product/edit/:id', function(req,res){
-  Product.findById(req.params.id, function(err, product){
-  	res.render('edit_product',{
-  		title:'Edit Product Information',
-  		product:product
-  	});
-  });
-});
-
-//Edit product Post
-app.post('/products/edit/:id',function(req,res){
-	let product = {};
-	product.title = req.body.title;
-	product.writer = req.body.writer;
-	product.body = req.body.body;
-
-	let query = {_id:req.params.id}
-
-	Product.update(query, product, function(err){
-		if(err){
-			console.log(err);
-
-		}else{
-			res.redirect('/product/'+req.params.id);
-
-		}
-
-	});
-
-});
-
-//Delete Product
-app.delete('/product/:id', function(req, res){
-	let query = {_id:req.params.id}
-	Product.remove(query, function(err){
-		if(err){
-			console.log(err);
-		}else{
-			res.send('Success');
-		}
-	});
-});
+//Route Files
+let products = require('./routes/products');
+app.use('/products', products)
+let users = require('./routes/users');
+app.use('/users', users)
 
 //start sever
 app.listen(3000, function(){

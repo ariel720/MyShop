@@ -13,7 +13,7 @@ $(document).ready(function(){
     const id = $target.attr('data-id');
     $.ajax({
       type:'DELETE',
-      url: '/product/'+id,
+      url: '/products/'+id,
       success: function(response){
         alert('Product Deleted.');
         window.location.href='/';
