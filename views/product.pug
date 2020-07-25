@@ -4,8 +4,11 @@ extends layout
 block content
   include partials/header  
   h1= product.title
-  h5 Posted by #{product.writer}
+  h5 Posted by #{writer}
   p=product.body
   hr
-  a.btn.btn-default(href='/products/edit/'+ product._id) Edit
-  a.btn.btn-danger.delete-product(href='#', data-id=product._id) Delete
+
+  if user
+    if user.id == product.writer
+      a.btn.btn-default(href='/products/edit/'+ product._id) Edit
+      a.btn.btn-danger.delete-product(href='#', data-id=product._id) Delete

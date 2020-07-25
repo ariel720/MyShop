@@ -11,8 +11,9 @@ header#header
       ul.nav.navbar-nav
         li
           a(href='/') Home
-        li
-          a(href='/products/add') Add Product
+        if user
+          li
+            a(href='/products/add') Add Product
       ul.nav.navbar-nav.navbar-nav-right
         if user
           li 

@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 let Product = require('../models/product');
-
+let User = require('../models/user');
 
 
 
 //Add product get
-router.get('/add',function(req, res){
+router.get('/add',ensureAuthenticated,function(req, res){
   res.render('add_product',{
     title:'Add Product'
   });
@@ -16,7 +16,7 @@ router.get('/add',function(req, res){
 //Add product Post
 router.post('/add',function(req,res){
   req.checkBody('title','Title is required').notEmpty();
-  req.checkBody('writer','Writer is required').notEmpty();
+  //req.checkBody('writer','Writer is required').notEmpty();
   req.checkBody('body','body is required').notEmpty();
 //Get error
   let errors = req.validationErrors();
@@ -27,19 +27,17 @@ router.post('/add',function(req,res){
       errors:errors
     });
   }else{
-
     let product = new Product();
     product.title = req.body.title;
-    product.writer = req.body.writer;
+    product.writer = req.user._id;
     product.body = req.body.body;
 
     product.save(function(err){
-
       if(err){
         console.log(err);
 
       }else{
-        req,flash('success','Product created');
+        req.flash('success','Product created');
         res.redirect('/');
       }
 
@@ -52,8 +50,13 @@ router.post('/add',function(req,res){
 
 
 //Edit Product get
-router.get('/edit/:id', function(req,res){
+router.get('/edit/:id', ensureAuthenticated, function(req,res){
   Product.findById(req.params.id, function(err, product){
+    if(product.writer != req.user._id){
+      req.flash('danger','Not Authorized');
+      res.redirect('/');
+
+    }
     res.render('edit_product',{
       title:'Edit Product Information',
       product:product
@@ -65,7 +68,6 @@ router.get('/edit/:id', function(req,res){
 router.post('/edit/:id',function(req,res){
   let product = {};
   product.title = req.body.title;
-  product.writer = req.body.writer;
   product.body = req.body.body;
 
   let query = {_id:req.params.id}
@@ -96,14 +98,27 @@ router.delete('/:id', function(req, res){
   });
 });
 
-//Read single obj
-router.get('/:id', function(req,res){
+// Get Single Article
+router.get('/:id', function(req, res){
   Product.findById(req.params.id, function(err, product){
-    res.render('product',{
-      product:product
+    User.findById(product.writer, function(err, user){
+      res.render('product', {
+        product:product,
+        writer: user.name
+      });
     });
   });
 });
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Please login');
+    res.redirect('/users/login');
+  }
+}
 
 
 module.exports = router;
