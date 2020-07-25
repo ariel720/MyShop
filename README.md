@@ -9,19 +9,8 @@
 * Passport.js Authentication
 * BCrypt Hashing
 
-### Version
-1.0.0
-
-
-### Installation
-
-Install the dependencies
-
-```sh
-$ npm install
-```
-Run app
-
-```sh
-$ npm start
-```
+### Function
+* Sign up, Sign in, Logout,
+* All user can see the whole list and detail,
+* Only Authorized users can access to the create page.
+* Items can be created, updated, edited and deleted by the created user.
